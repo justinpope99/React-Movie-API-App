@@ -4,6 +4,7 @@ import axios from 'axios';
 
 export default axios.create({
     // The baseURL provides the base address of the API endpoints that our app will be calling
-    baseURL:'http://localhost:8080',
+    baseURL:'https://expensive-ellissa-justin-pope-f21c5acc.koyeb.app',
+    timeout: 20000,
     headers: {"Content-type": "application/json"}
 })
