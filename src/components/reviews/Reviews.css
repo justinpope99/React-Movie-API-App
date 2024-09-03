@@ -1,0 +1,64 @@
+.review-main {
+  height: calc(100vh - 36px);
+  overflow: auto;
+}
+
+.movie-review-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.movie-poster-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.movie-details-button {
+  display: flex;
+  justify-content: center;
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+.movie-poster-review {
+  height: 500px;
+}
+
+.review-container {
+  margin-top: 12px;
+}
+
+.reviews-form {
+  margin-top: 12px;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+.reviews-content-name {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  height: fit-content;
+  align-items: center;
+  justify-content: start;
+  gap: 8px;
+}
+
+.reviews-content-name h4 {
+  font-size: 1.35em;
+  font-weight: 600;
+  margin: 0;
+}
+
+.reviews-content-body {
+  font-size: 1.2em;
+}
+
+.reviews-content-date {
+  margin-top: 8px;
+  color: rgb(184, 193, 193);
+  font-size: 1em;
+}

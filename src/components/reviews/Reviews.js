@@ -1,113 +1,159 @@
+import "./Reviews.css";
 import { useEffect, useRef } from "react";
-import api from '../../api/axiosConfig';
-import { useParams } from "react-router-dom";
-import { Container, Row, Col } from "react-bootstrap";
+import api from "../../api/axiosConfig";
+import { useParams, useNavigate } from "react-router-dom";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import ReviewForm from "../reviewForm/ReviewForm";
 
-import React from 'react'
+import React from "react";
+import { Avatar } from "@mui/material";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const Reviews = ({getMovieData,movie,reviews,setReviews}) => {
+const Reviews = ({ getMovieData, movie, reviews, setReviews }) => {
+  const navigate = useNavigate();
 
-    const revText = useRef();
-    let params = useParams();
-    // This is used to identify a specific movie
-    const movieId = params.movieId;
+  function details(movieId) {
+    navigate(`/Movie/${movieId}`);
+  }
 
-    // When our component first loads, we want to call a method that is passed in as a prop to our component in order to retrieve the data for the movie the user wishes to review
-    useEffect(() => {
-        getMovieData(movieId);
-    }, []);
+  const revText = useRef();
+  let params = useParams();
+  // This is used to identify a specific movie
+  const movieId = params.movieId;
 
-    const addReview = async (e) => {
-        e.preventDefault();
+  // When our component first loads, we want to call a method that is passed in as a prop to our component in order to retrieve the data for the movie the user wishes to review
+  useEffect(() => {
+    getMovieData(movieId);
+  }, []);
 
-        const rev = revText.current;
+  let reviewCount = movie?.reviewIds.length;
 
-        try {
-            const response = await api.post("/api/v1/reviews",{reviewBody:rev.value,imdbId:movieId});
+  const addReview = async (e) => {
+    e.preventDefault();
 
-            // We are updating the array optimistically from the data entered on the client, not in the database
-            const updatedReviews = [{body:rev.value}];
+    // Review Text
+    const rev = revText.current;
 
-            // We want to clear the textarea control once the user has submitted a review successfully
-            rev.value = "";
+    try {
+      const response = await api.post("/api/v1/reviews", {
+        reviewBody: rev.value,
+        imdbId: movieId,
+      });
 
-            // We are updating the state of the review array on the client with the setReviews() method that will be passed as a prop from the app component
-            setReviews(updatedReviews);
-        }
-        catch (error) {
-            console.log(error);   
-        }
+      // We are updating the array optimistically from the data entered on the client, not in the database
+      const updatedReviews = [{ body: rev.value }];
 
+      // We want to clear the textarea control once the user has submitted a review successfully
+      rev.value = "";
+
+      // We are updating the state of the review array on the client with the setReviews() method that will be passed as a prop from the app component
+      setReviews(updatedReviews);
+      getMovieData(movieId);
+      reviewCount += 1;
+      toast.success("You've successfully posted your review!", {
+        theme: "colored",
+      });
+    } catch (error) {
+      console.log(error.stack);
+      toast.error("Your review failed to post. Please try again later.", {
+        theme: "colored",
+      });
     }
+  };
 
   return (
-    <Container>
-      <Row>
-        <Col><h3>Reviews</h3></Col>
-      </Row>
-      <Row className="mt-2">
-        <Col>
-            <img src={movie?.poster} alt="" />
-        </Col>
-        <Col>
-            {
+    <>
+      <div className="review-main">
+        <Container className="review-container">
+          <Row>
+            <Col className="movie-review-header">
+              <h3>Reviews for {movie?.title}</h3>
+            </Col>
+          </Row>
+          <Row>
+            <Col className="movie-poster-container">
+              <img src={movie?.poster} alt="" className="movie-poster-review" />
+            </Col>
+          </Row>
+          <Row>
+            <Col className="movie-details-button">
+              <Button
+                variant="outline-info"
+                onClick={() => details(movie.imdbId)}
+              >
+                Go to Movie Page
+              </Button>
+            </Col>
+          </Row>
+          <Row>
+            <Col>{`${reviewCount} User Reviews for ${movie?.title}`}</Col>
+          </Row>
+          <Row className="reviews-container">
+            <Col>
+              {
                 <>
-                <Row>
-                    <Col>
-                        <ReviewForm handleSubmit={addReview} revText={revText} labelText="Write a Review?"/>
+                  <Row>
+                    <Col className="reviews-form">
+                      <ReviewForm
+                        handleSubmit={addReview}
+                        revText={revText}
+                        labelText="Write a Review?"
+                      />
                     </Col>
-                </Row>
-                <Row>
+                  </Row>
+                  <Row>
                     <Col>
-                        <hr />
+                      <hr />
                     </Col>
-                </Row>
+                  </Row>
                 </>
-            }
-            {
+              }
+              {
                 // This map is used to bring up the historical reviews from the database
                 movie?.reviewIds.map((sub) => {
-                    return(
-                        <>
-                            <Row>
-                                <Col>{sub.body}</Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <hr />
-                                </Col>
-                            </Row>
-                        </>
-                    )
+                  const date = new Date(sub.id.date);
+                  return (
+                    <>
+                      <Row>
+                        <Row>
+                          <div className="reviews-content-name">
+                            <Avatar sx={{ width: 32, height: 32 }}>G</Avatar>
+                            <h4>Guest</h4>
+                          </div>
+                        </Row>
+                        <Row>
+                          <Col className="reviews-content-body">{sub.body}</Col>
+                        </Row>
+                        <Row>
+                          <Col className="reviews-content-date">{`Posted on ${date.toLocaleString(
+                            "en-US",
+                            {
+                              timeZoneName: "short",
+                            }
+                          )}`}</Col>
+                        </Row>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <hr />
+                        </Col>
+                      </Row>
+                    </>
+                  );
                 })
-            }
-            {
-                // This map is used to list the reviews that the client has entered
-                reviews?.map((r) => {
-                    return(
-                        <>
-                            <Row>
-                                <Col>{r.body}</Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <hr />
-                                </Col>
-                            </Row>
-                        </>
-                    )
-                })
-            }
-        </Col>
-      </Row>
-    <Row>
-        <Col>
-            <hr />
-        </Col>
-    </Row>
-    </Container>
-  )
-}
+              }
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <hr />
+            </Col>
+          </Row>
+        </Container>
+      </div>
+    </>
+  );
+};
 
-export default Reviews
+export default Reviews;
