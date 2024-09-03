@@ -1,0 +1,21 @@
+.movie-page {
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+
+.movie-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.movie-page-container img {
+  width: 250px;
+}
+
+.movie-page-container p {
+  max-width: 330px;
+}
