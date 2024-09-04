@@ -1,11 +1,11 @@
-import Hero from "../hero/Hero"
+import Hero from "../hero/Hero";
 
-const Home = ({movies}) => {
+const Home = ({ movies }) => {
   return (
     <div>
-      <Hero movies = {movies} />
+      <Hero movies={movies} />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
