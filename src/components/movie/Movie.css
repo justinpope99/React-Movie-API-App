@@ -19,3 +19,13 @@
 .movie-page-container p {
   max-width: 330px;
 }
+
+.movie-page-buttons-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 280px;
+  height: 40px;
+  overflow: visible;
+}
