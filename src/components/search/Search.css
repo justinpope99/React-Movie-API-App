@@ -33,6 +33,7 @@
 .search-movie-card {
   display: flex;
   flex-direction: row;
+  justify-content: space-evenly;
   background-color: black;
   width: 350px;
   height: 180px;
@@ -47,6 +48,7 @@
 }
 
 .movie-details {
+  width: 290px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -55,13 +57,14 @@
 .search-movie-buttons {
   display: flex;
   flex-direction: row;
+  justify-content: space-evenly;
   gap: 4px;
   font-size: 0.9rem;
 }
 .search-movie-button {
   color: #fff;
   background-color: hsl(210, 11%, 15%);
-  width: 120px;
+  width: 110px;
   border: 1px solid gold;
   border-radius: 4px;
 }
